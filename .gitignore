@@ -1,0 +1,16 @@
+# Virtual environment - recreated from requirements.txt, never committed
+venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Data files - re-downloadable, and can get large
+data/*.csv
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# OS junk
+Thumbs.db
+desktop.ini
