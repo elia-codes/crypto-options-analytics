@@ -14,3 +14,9 @@ data/*.csv
 # OS junk
 Thumbs.db
 desktop.ini
+
+# Office lock files
+~$*
+
+# Archives
+*.zip

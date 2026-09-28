@@ -45,7 +45,3 @@ def vega(S, K, T, r, sigma):
 
     d1 = (np.log(S/K) + (r + 0.5 * sigma**2)*T) / (sigma * np.sqrt(T))
     return S * norm.pdf(d1) * np.sqrt(T)
-print(black_scholes(S=100, K=100, T=1, r=0.05, sigma=0.2, option_type="call"))
-
-
-print(vega(S=100, K=100, T=1, r=0.05, sigma=0.2))

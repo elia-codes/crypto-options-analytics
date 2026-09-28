@@ -33,14 +33,13 @@ prices_df = pd.DataFrame(price_rows)
 prices_df = prices_df[["instrument_name", "bid_price", "ask_price", "mark_price", "mark_iv", "underlying_price"]]
 
 merged = pd.merge(df, prices_df, on="instrument_name")
-merged.to_csv("data/btc_options_with_prices.csv", index=False)
-
-#Black Scholes formula for option pricing
 
 now = pd.Timestamp.now('utc').tz_localize(None)
 merged["time_to_expiry"] = (merged["expiry"] - now).dt.total_seconds() / (365 * 24 * 60 * 60)
 
 merged["mark_price_usd"]= merged["mark_price"] * merged["underlying_price"]
+
+#Black Scholes formula for option pricing
 
 merged["bs_price"] = merged.apply(
     lambda row: black_scholes(
@@ -53,11 +52,8 @@ merged["bs_price"] = merged.apply(
     ), 
     axis=1
 )
-# At the money option price is the same as the underlying price
 
 merged["diff"]=merged["mark_price_usd"] - merged["bs_price"]
-
-near = merged[(merged["strike"] > 62000) & (merged["strike"] < 65000)]
 
 merged["my_iv"] = merged.apply(
     lambda row: implied_volatility(
@@ -80,3 +76,10 @@ near = merged[(merged["moneyness"] > 0.97) & (merged["moneyness"] < 1.03)]
 merged.to_csv("data/btc_options_with_prices.csv", index=False) 
 print(near[["instrument_name", "moneyness", "mark_iv", "my_iv", "iv_diff"]].head(15))
 
+def prob_itm(S, K, T, r, sigma, option_type):
+    """Risk-neutral probability the option expires in the money."""
+    if T <= 0 or sigma <= 0:
+        return float("nan")
+
+    d2 = (np.log(S/K) + (r - 0.5 * sigma**2))/(sigma * np.sqrt(T))
+    return norm.cdf(d2) if option_type == "call" else norm.cdf(-d2)

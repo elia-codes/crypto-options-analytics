@@ -24,7 +24,4 @@ def implied_volatility(market_price, S, K, T, r, option_type,
 
         sigma = sigma - error / v
 
-        if sigma <= 0:
-            return float("nan")
-
     return float("nan")
